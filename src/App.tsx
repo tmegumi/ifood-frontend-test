@@ -1,9 +1,15 @@
 import React from 'react';
 
-function App() {
+import Playlists from './pages/Playlists';
+import GlobalStyle from './styles/global';
+
+const App: React.FC = () => {
   return (
-    <h1>Spotifood</h1>
+    <>
+      <Playlists />
+      <GlobalStyle />
+    </>
   );
-}
+};
 
 export default App;
