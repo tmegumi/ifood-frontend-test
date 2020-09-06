@@ -22,7 +22,7 @@ export const Form = styled.form`
   }
 
   button {
-    background-color: #04d361;
+    background-color: #1db954;
     border: 0;
     border-radius: 0.3rem;
     color: #fff;
@@ -47,6 +47,23 @@ export const Form = styled.form`
       margin-top: 0;
       width: 15rem;
     }
+  }
+`;
+
+export const LogInButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #1db954;
+  border-radius: 1.5rem;
+  height: 3rem;
+  margin-top: 3rem;
+  width: 12rem;
+
+  a {
+    color: #fff;
+    text-decoration: none;
   }
 `;
 
