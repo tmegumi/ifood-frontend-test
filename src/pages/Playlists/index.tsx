@@ -1,16 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useAuth } from '../../hooks/auth';
 
 import logIn from '../../services/auth';
+import { PlaylistItem, getFeaturePlaylists } from '../../services/playlists';
 
 import { Form, LogInButton, PlaylistItems, Title } from './styles';
 
 const Playlists: React.FC = () => {
+  const [items, setItems] = useState<PlaylistItem[]>([]);
+
   const { token } = useAuth();
 
   useEffect(() => {
-    console.log(token);
+    if (token) {
+      getFeaturePlaylists(token).then(playlists => {
+        setItems(playlists);
+      });
+    }
   }, [token]);
 
   return (
@@ -24,50 +31,18 @@ const Playlists: React.FC = () => {
 
       {!token && <LogInButton onClick={logIn}>Login to Spotify</LogInButton>}
 
-      {token && (
+      {token && items && (
         <PlaylistItems>
-          <a href="http://open.spotify.com/user/spotify/playlist/6ftJBzU2LLQcaKefMi7ee7">
-            <img
-              src="https://lite-images-i.scdn.co/image/ab67706f00000002b993db2853bd63806df2464f"
-              alt="Monday Morning Mood"
-            />
+          {items.map(item => (
+            <a key={item.id} href={item.external_urls.spotify}>
+              <img src={item.images[0].url} alt={item.name} />
 
-            <div>
-              <strong>Monday Morning Mood</strong>
-              <p>
-                Relaxed deep house to slowly help you get back on your feet and
-                ready yourself for a productive week
-              </p>
-            </div>
-          </a>
-          <a href="http://open.spotify.com/user/spotify/playlist/6ftJBzU2LLQcaKefMi7ee7">
-            <img
-              src="https://lite-images-i.scdn.co/image/ab67706f000000027e368901f39aae9d510c8fda"
-              alt="Monday Morning Mood"
-            />
-
-            <div>
-              <strong>Monday Morning Mood</strong>
-              <p>
-                Relaxed deep house to slowly help you get back on your feet and
-                ready yourself for a productive week
-              </p>
-            </div>
-          </a>
-          <a href="http://open.spotify.com/user/spotify/playlist/6ftJBzU2LLQcaKefMi7ee7">
-            <img
-              src="https://lite-images-i.scdn.co/image/ab67706f00000002b993db2853bd63806df2464f"
-              alt="Monday Morning Mood"
-            />
-
-            <div>
-              <strong>Monday Morning Mood</strong>
-              <p>
-                Relaxed deep house to slowly help you get back on your feet and
-                ready yourself for a productive week
-              </p>
-            </div>
-          </a>
+              <div>
+                <strong>{item.name}</strong>
+                <p>{item.description}</p>
+              </div>
+            </a>
+          ))}
         </PlaylistItems>
       )}
     </>

@@ -58,6 +58,7 @@ export const Form = styled.form`
 
 export const LogInButton = styled.button`
   background-color: #1db954;
+  border: none;
   border-radius: 1.5rem;
   color: #fff;
   font-weight: bold;
