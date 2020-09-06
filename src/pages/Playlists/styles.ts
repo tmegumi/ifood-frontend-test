@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Title = styled.h1`
   margin-top: 2rem;
@@ -29,6 +30,11 @@ export const Form = styled.form`
     font-weight: bold;
     height: 2.8rem;
     margin-top: 0.5rem;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: ${shade(0.2, '#1db954')};
+    }
   }
 
   @media (min-width: 500px) {
@@ -50,20 +56,19 @@ export const Form = styled.form`
   }
 `;
 
-export const LogInButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+export const LogInButton = styled.button`
   background-color: #1db954;
   border-radius: 1.5rem;
+  color: #fff;
+  font-weight: bold;
   height: 3rem;
   margin-top: 3rem;
   width: 12rem;
+  text-align: center;
+  transition: background-color 0.2s;
 
-  a {
-    color: #fff;
-    text-decoration: none;
+  &:hover {
+    background-color: ${shade(0.2, '#1db954')};
   }
 `;
 

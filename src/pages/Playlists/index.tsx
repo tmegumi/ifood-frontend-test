@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+
+import { useAuth } from '../../hooks/auth';
+
+import logIn from '../../services/auth';
 
 import { Form, LogInButton, PlaylistItems, Title } from './styles';
-import getTokenFromHashLocation from '../../utils/getTokenFromHashLocation';
-
-export const authEndpoint = 'https://accounts.spotify.com/authorize';
-
-// Replace with your app's client ID, redirect URI and desired scopes
-const clientId = 'YOUR_CLIENT_ID_HERE';
-const redirectUri = 'http://localhost:3000';
-const scopes = ['user-read-email'];
 
 const Playlists: React.FC = () => {
-  const [token, setToken] = useState('');
-  const location = useLocation();
+  const { token } = useAuth();
 
   useEffect(() => {
-    const { accessToken } = getTokenFromHashLocation(location.hash);
-
-    setToken(accessToken);
-  }, [location]);
+    console.log(token);
+  }, [token]);
 
   return (
     <>
@@ -30,17 +22,7 @@ const Playlists: React.FC = () => {
         <button type="submit">Search</button>
       </Form>
 
-      {!token && (
-        <LogInButton>
-          <a
-            href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-              '%20',
-            )}&response_type=token&show_dialog=true`}
-          >
-            Login to Spotify
-          </a>
-        </LogInButton>
-      )}
+      {!token && <LogInButton onClick={logIn}>Login to Spotify</LogInButton>}
 
       {token && (
         <PlaylistItems>

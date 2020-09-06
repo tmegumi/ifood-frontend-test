@@ -23,4 +23,8 @@ export default createGlobalStyle`
     margin: 0 auto;
     padding: 0 1rem;
   }
+
+  button {
+    cursor: pointer;
+  }
 `;
