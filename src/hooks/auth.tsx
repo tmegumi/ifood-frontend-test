@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import getTokenFromHashLocation from '../utils/getTokenFromHashLocation';
 
 interface AuthContextData {
-  token: string;
+  token?: string | null;
 }
 
 interface AuthProviderProps {
@@ -16,14 +16,28 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
 }: AuthProviderProps) => {
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(() => {
+    const token = localStorage.getItem('@Spotifood:token');
+
+    if (token) {
+      return token;
+    }
+
+    return null;
+  });
 
   const location = useLocation();
 
   useEffect(() => {
-    const { accessToken } = getTokenFromHashLocation(location.hash);
+    if (!token) {
+      const { accessToken } = getTokenFromHashLocation(location.hash);
 
-    setToken(accessToken);
+      if (accessToken) {
+        localStorage.setItem('@Spotifood:token', accessToken);
+
+        setToken(accessToken);
+      }
+    }
   }, [token, location]);
 
   return (
