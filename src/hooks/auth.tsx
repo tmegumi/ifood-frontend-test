@@ -24,7 +24,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
     const { accessToken } = getTokenFromHashLocation(location.hash);
 
     setToken(accessToken);
-  }, [location]);
+  }, [token, location]);
 
   return (
     <AuthContext.Provider value={{ token }}>{children}</AuthContext.Provider>

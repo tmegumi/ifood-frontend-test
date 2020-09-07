@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-import filter from '../constants/filter.json';
-
-interface PlaylistItemImage {
-  url: string;
+export interface FilterQuery {
+  locale?: string;
+  country?: string;
+  timestamp?: string;
+  limit?: string;
+  offset?: string;
 }
 
-export interface PlaylistItem {
+export interface PlaylistItemData {
   description: string;
   external_urls: {
     spotify: string;
@@ -16,15 +18,40 @@ export interface PlaylistItem {
   name: string;
 }
 
-export const getFeaturePlaylists = async (
+interface PlaylistItemImage {
+  url: string;
+}
+
+interface QueryParams {
+  [key: string]: string;
+}
+
+const getFeaturePlaylists = async (
   token: string,
-): Promise<PlaylistItem[]> => {
+  filter?: FilterQuery,
+): Promise<PlaylistItemData[]> => {
+  const params = {} as QueryParams;
+
+  if (filter?.locale) {
+    params.locale = filter.locale;
+  }
+  if (filter?.country) {
+    params.country = filter.country;
+  }
+  if (filter?.timestamp) {
+    params.timestamp = filter.timestamp;
+  }
+  if (filter?.limit) {
+    params.limit = filter.limit;
+  }
+  if (filter?.offset) {
+    params.offset = filter.offset;
+  }
+
   const response = await axios.get(
     'https://api.spotify.com/v1/browse/featured-playlists',
     {
-      params: {
-        filter,
-      },
+      params,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -33,3 +60,5 @@ export const getFeaturePlaylists = async (
 
   return response.data.playlists.items;
 };
+
+export default getFeaturePlaylists;

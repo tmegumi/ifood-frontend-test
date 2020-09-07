@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FormEvent } from 'react';
+import { FiSearch } from 'react-icons/fi';
 
 import { useAuth } from '../../hooks/auth';
 
 import logIn from '../../services/auth';
-import { PlaylistItem, getFeaturePlaylists } from '../../services/playlists';
+import getFeaturePlaylists, {
+  FilterQuery,
+  PlaylistItemData,
+} from '../../services/playlists';
+
+import PlaylistFilter from '../../components/PlaylistFilter';
 
 import { Form, LogInButton, PlaylistItems, Title } from './styles';
 
 const Playlists: React.FC = () => {
-  const [items, setItems] = useState<PlaylistItem[]>([]);
+  const [items, setItems] = useState<PlaylistItemData[]>([]);
+  const [filterName, setFilterName] = useState('');
 
   const { token } = useAuth();
 
@@ -20,14 +27,44 @@ const Playlists: React.FC = () => {
     }
   }, [token]);
 
+  async function handleFilterPlaylists(filter: FilterQuery) {
+    const playlists = await getFeaturePlaylists(token, filter);
+
+    setItems(playlists);
+  }
+
+  function handleSearchPlaylistByName(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!filterName) {
+      return;
+    }
+
+    const regex = new RegExp(`${filterName}.+$`, 'i');
+
+    const filteredItems = items.filter(item => {
+      return item.name.search(regex) !== -1;
+    });
+
+    setItems(filteredItems);
+  }
+
   return (
     <>
       <Title>Explore your featured playlists</Title>
 
-      <Form>
-        <input placeholder="Search" />
-        <button type="submit">Search</button>
+      <Form onSubmit={handleSearchPlaylistByName}>
+        <input
+          value={filterName}
+          onChange={e => setFilterName(e.target.value)}
+          placeholder="Search by name..."
+        />
+        <button type="submit">
+          <FiSearch size={22} />
+        </button>
       </Form>
+
+      <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
 
       {!token && <LogInButton onClick={logIn}>Login to Spotify</LogInButton>}
 

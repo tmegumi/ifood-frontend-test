@@ -1,6 +1,6 @@
 // Replace with your app's client ID, redirect URI and desired scopes
 const authEndpoint = 'https://accounts.spotify.com/authorize';
-const clientId = 'YOUR_CLIENT_ID_HERE';
+const clientId = '6aa26c35f55d4a109610e64c709057c5';
 const redirectUri = 'http://localhost:3000';
 const scopes = ['user-read-email'];
 
