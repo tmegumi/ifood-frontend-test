@@ -4,12 +4,14 @@ import { FiSearch } from 'react-icons/fi';
 import { useAuth } from '../../hooks/auth';
 
 import logIn from '../../services/auth';
-import getFeaturePlaylists, {
+
+import {
   FilterQuery,
   PlaylistItemData,
+  getFeaturePlaylists
 } from '../../services/playlists';
 
-import PlaylistFilter from '../../components/PlaylistFilter';
+import PlaylistFilter from './components/PlaylistFilter';
 
 import { Form, LogInButton, PlaylistItems, Title } from './styles';
 
@@ -28,9 +30,11 @@ const Playlists: React.FC = () => {
   }, [token]);
 
   async function handleFilterPlaylists(filter: FilterQuery) {
-    const playlists = await getFeaturePlaylists(token, filter);
+    if (token) {
+      const playlists = await getFeaturePlaylists(token, filter);
 
-    setItems(playlists);
+      setItems(playlists);
+    }
   }
 
   function handleSearchPlaylistByName(event: FormEvent<HTMLFormElement>) {

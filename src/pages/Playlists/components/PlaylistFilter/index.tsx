@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
-import filtersData from '../../constants/filters.json';
-
-import { FilterQuery } from '../../services/playlists';
+import { Filter, FilterQuery, FilterValueItem, getPlaylistFilters } from '../../../../services/playlists';
 
 import { Container, FilterItem } from './styles';
 
 interface PlaylistFilterProps {
   onFilterChanged(filter: FilterQuery): void;
-}
-
-interface Filter {
-  id: string;
-  name: string;
-  values?: ValueItem[];
-  validation?: {
-    primitiveType: string;
-    entityType?: string;
-    pattern?: string;
-    min?: number;
-    max?: number;
-  };
-}
-
-interface ValueItem {
-  name: string;
-  label: string;
 }
 
 const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
@@ -45,35 +25,17 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
   const [selectedOffset, setSelectedOffset] = useState('');
 
   useEffect(() => {
-    filtersData.filters.forEach(filter => {
-      let valueItems = null;
-
-      if (filter.values) {
-        valueItems = filter.values.map(value => {
-          return {
-            name: value.name,
-            label: value.value,
-          };
-        });
-      }
-
-      const filterItem = {
-        id: filter.id,
-        name: filter.name,
-        values: valueItems,
-        validation: filter.validation,
-      } as Filter;
-
+    getPlaylistFilters().forEach(filter => {
       if (filter.id === 'locale') {
-        setLocale(filterItem);
+        setLocale(filter);
       } else if (filter.id === 'country') {
-        setCountry(filterItem);
+        setCountry(filter);
       } else if (filter.id === 'timestamp') {
-        setDateTime(filterItem);
+        setDateTime(filter);
       } else if (filter.id === 'limit') {
-        setLimit(filterItem);
+        setLimit(filter);
       } else if (filter.id === 'offset') {
-        setOffset(filterItem);
+        setOffset(filter);
       }
     });
   }, []);
@@ -95,7 +57,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
           classNamePrefix="react-select"
           placeholder={locale.name}
           options={locale.values}
-          onChange={e => setSelectedLocale((e as ValueItem)?.label)}
+          onChange={e => setSelectedLocale((e as FilterValueItem)?.label)}
         />
       </FilterItem>
       <FilterItem>
@@ -103,7 +65,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
           classNamePrefix="react-select"
           placeholder={country.name}
           options={country.values}
-          onChange={e => setSelectedCountry((e as ValueItem)?.label)}
+          onChange={e => setSelectedCountry((e as FilterValueItem)?.label)}
         />
       </FilterItem>
       <FilterItem>

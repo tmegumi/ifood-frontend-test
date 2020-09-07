@@ -67,9 +67,14 @@ export const PlaylistItems = styled.div`
     color: #fff;
     padding: 1rem;
     text-decoration: none;
+    transition: transform 0.2s;
 
     & + a {
       margin-top: 1rem;
+    }
+
+    &:hover {
+      transform: translateX(0.8rem);
     }
 
     img {

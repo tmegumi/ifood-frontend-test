@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import filtersData from '../constants/filters.json';
+
 export interface FilterQuery {
   locale?: string;
   country?: string;
@@ -26,7 +28,25 @@ interface QueryParams {
   [key: string]: string;
 }
 
-const getFeaturePlaylists = async (
+export interface Filter {
+  id: string;
+  name: string;
+  values?: FilterValueItem[];
+  validation?: {
+    primitiveType: string;
+    entityType?: string;
+    pattern?: string;
+    min?: number;
+    max?: number;
+  };
+}
+
+export interface FilterValueItem {
+  name: string;
+  label: string;
+}
+
+export const getFeaturePlaylists = async (
   token: string,
   filter?: FilterQuery,
 ): Promise<PlaylistItemData[]> => {
@@ -61,4 +81,24 @@ const getFeaturePlaylists = async (
   return response.data.playlists.items;
 };
 
-export default getFeaturePlaylists;
+export const getPlaylistFilters = (): Filter[] => {
+  return filtersData.filters.map(filter => {
+    let valueItems = null;
+
+    if (filter.values) {
+      valueItems = filter.values.map(value => {
+        return {
+          name: value.name,
+          label: value.value,
+        };
+      });
+    }
+
+    return {
+      id: filter.id,
+      name: filter.name,
+      values: valueItems,
+      validation: filter.validation,
+    } as Filter;
+  });
+};
