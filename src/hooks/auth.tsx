@@ -17,10 +17,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
 }: AuthProviderProps) => {
   const [token, setToken] = useState(() => {
-    const token = localStorage.getItem('@Spotifood:token');
+    const storedToken = localStorage.getItem('@Spotifood:token');
 
-    if (token) {
-      return token;
+    if (storedToken) {
+      return storedToken;
     }
 
     return null;
@@ -30,12 +30,29 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
 
   useEffect(() => {
     if (!token) {
-      const { accessToken } = getTokenFromHashLocation(location.hash);
+      const { accessToken, expiresIn } = getTokenFromHashLocation(
+        location.hash,
+      );
 
       if (accessToken) {
+        const expiresAt = new Date();
+        expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
+
         localStorage.setItem('@Spotifood:token', accessToken);
+        localStorage.setItem('@Spotifood:expiresAt', expiresAt.toString());
 
         setToken(accessToken);
+      }
+    } else {
+      const currentDate = new Date();
+      const expiresAt = localStorage.getItem('@Spotifood:expiresAt');
+
+      if (
+        expiresAt &&
+        currentDate.getTime() > Date.parse(expiresAt.toString())
+      ) {
+        localStorage.removeItem('@Spotifood:token');
+        localStorage.removeItem('@Spotifood:expiresAt');
       }
     }
   }, [token, location]);

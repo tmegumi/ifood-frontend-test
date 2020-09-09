@@ -71,7 +71,7 @@
     },
     {
       "id": "limit",
-      "name": "Items per page",
+      "name": "Quantity",
       "validation": {
         "primitiveType": "INTEGER",
         "min": 1,

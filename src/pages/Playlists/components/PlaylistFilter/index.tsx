@@ -3,7 +3,12 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 
-import { Filter, FilterQuery, FilterValueItem, getPlaylistFilters } from '../../../../services/playlists';
+import {
+  Filter,
+  FilterQuery,
+  FilterValueItem,
+  getPlaylistFilters,
+} from '../../../../services/playlists';
 
 import { Form, FormItem } from './styles';
 
@@ -43,13 +48,17 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
   }, []);
 
   function handleLimitInputChange(event: ChangeEvent<HTMLInputElement>) {
-    let value = Number(event.target.value);
+    const value = Number(event.target.value);
 
     if (!value) {
       setSelectedLimit('');
     }
 
-    if (limit.validation && (value < Number(limit.validation.min) || value > Number(limit.validation?.max))) {
+    if (
+      limit.validation &&
+      (value < Number(limit.validation.min) ||
+        value > Number(limit.validation?.max))
+    ) {
       return;
     }
 
@@ -115,9 +124,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
           type="number"
         />
       </FormItem>
-      <button type="submit">
-        Filter
-      </button>
+      <button type="submit">Filter</button>
     </Form>
   );
 };

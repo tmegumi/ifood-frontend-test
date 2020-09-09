@@ -9,24 +9,33 @@ import logIn from '../../services/auth';
 import {
   FilterQuery,
   PlaylistItemData,
-  getFeaturePlaylists
+  getFeaturePlaylists,
 } from '../../services/playlists';
 
+import Loader from '../../components/Loader';
 import PlaylistFilter from './components/PlaylistFilter';
 import PlaylistItems from './components/PlaylistItems';
 
 import { SearchNameForm, LogInButton, Logo, Subtitle, Title } from './styles';
 
 const Playlists: React.FC = () => {
-  const [items, setItems] = useState<PlaylistItemData[]>([]);
   const [filterName, setFilterName] = useState('');
+  const [initialItems, setInitialItems] = useState<PlaylistItemData[]>([]);
+  const [items, setItems] = useState<PlaylistItemData[]>([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
 
   const { token } = useAuth();
+
+  function setItemsLoaded(playlists: PlaylistItemData[]) {
+    setInitialItems(playlists);
+    setItems(playlists);
+    setIsLoadingItems(false);
+  }
 
   useEffect(() => {
     if (token) {
       getFeaturePlaylists(token).then(playlists => {
-        setItems(playlists);
+        setItemsLoaded(playlists);
       });
     }
   }, [token]);
@@ -35,7 +44,7 @@ const Playlists: React.FC = () => {
     if (token) {
       const playlists = await getFeaturePlaylists(token, filter);
 
-      setItems(playlists);
+      setItemsLoaded(playlists);
     }
   }
 
@@ -43,6 +52,7 @@ const Playlists: React.FC = () => {
     event.preventDefault();
 
     if (!filterName) {
+      setItems(initialItems);
       return;
     }
 
@@ -88,6 +98,8 @@ const Playlists: React.FC = () => {
           </SearchNameForm>
 
           <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
+
+          <Loader isLoading={isLoadingItems} />
 
           {items && <PlaylistItems items={items} />}
         </>
