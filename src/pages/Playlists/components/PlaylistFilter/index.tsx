@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
 
 import { Filter, FilterQuery, FilterValueItem, getPlaylistFilters } from '../../../../services/playlists';
 
-import { Container, FilterItem } from './styles';
+import { Form, FormItem } from './styles';
 
 interface PlaylistFilterProps {
   onFilterChanged(filter: FilterQuery): void;
@@ -20,7 +22,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
 
   const [selectedLocale, setSelectedLocale] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedDateTime, setSelectedDateTime] = useState('');
+  const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [selectedLimit, setSelectedLimit] = useState('');
   const [selectedOffset, setSelectedOffset] = useState('');
 
@@ -40,7 +42,23 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
     });
   }, []);
 
-  function handlePlaylistFilter() {
+  function handleLimitInputChange(event: ChangeEvent<HTMLInputElement>) {
+    let value = Number(event.target.value);
+
+    if (!value) {
+      setSelectedLimit('');
+    }
+
+    if (limit.validation && (value < Number(limit.validation.min) || value > Number(limit.validation?.max))) {
+      return;
+    }
+
+    setSelectedLimit(value.toString());
+  }
+
+  function handlePlaylistFilter(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     onFilterChanged({
       locale: selectedLocale,
       country: selectedCountry,
@@ -51,51 +69,56 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
   }
 
   return (
-    <Container>
-      <FilterItem>
+    <Form onSubmit={handlePlaylistFilter}>
+      <FormItem>
         <Select
           classNamePrefix="react-select"
           placeholder={locale.name}
           options={locale.values}
-          onChange={e => setSelectedLocale((e as FilterValueItem)?.label)}
+          onChange={e => setSelectedLocale((e as FilterValueItem)?.name)}
         />
-      </FilterItem>
-      <FilterItem>
+      </FormItem>
+      <FormItem>
         <Select
           classNamePrefix="react-select"
           placeholder={country.name}
           options={country.values}
-          onChange={e => setSelectedCountry((e as FilterValueItem)?.label)}
+          onChange={e => setSelectedCountry((e as FilterValueItem)?.name)}
         />
-      </FilterItem>
-      <FilterItem>
-        <input
+      </FormItem>
+      <FormItem>
+        <DatePicker
+          showTimeInput
           name={dateTime.id}
-          placeholder={dateTime.name}
-          value={selectedDateTime}
-          onChange={e => setSelectedDateTime(e.target.value)}
+          placeholderText={dateTime.name}
+          selected={selectedDateTime}
+          dateFormat="yyyy/MM/dd HH:mm"
+          timeFormat="HH:mm"
+          onChange={date => setSelectedDateTime(date as Date)}
         />
-      </FilterItem>
-      <FilterItem>
+      </FormItem>
+      <FormItem>
         <input
           name={limit.id}
           placeholder={limit.name}
           value={selectedLimit}
-          onChange={e => setSelectedLimit(e.target.value)}
+          onChange={handleLimitInputChange}
+          type="number"
         />
-      </FilterItem>
-      <FilterItem>
+      </FormItem>
+      <FormItem>
         <input
           name={offset.id}
           placeholder={offset.name}
           value={selectedOffset}
           onChange={e => setSelectedOffset(e.target.value)}
+          type="number"
         />
-      </FilterItem>
-      <button type="submit" onClick={handlePlaylistFilter}>
+      </FormItem>
+      <button type="submit">
         Filter
       </button>
-    </Container>
+    </Form>
   );
 };
 

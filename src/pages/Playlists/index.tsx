@@ -1,5 +1,6 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import { FaSpotify } from 'react-icons/fa';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -12,8 +13,9 @@ import {
 } from '../../services/playlists';
 
 import PlaylistFilter from './components/PlaylistFilter';
+import PlaylistItems from './components/PlaylistItems';
 
-import { Form, LogInButton, PlaylistItems, Title } from './styles';
+import { SearchNameForm, LogInButton, Logo, Subtitle, Title } from './styles';
 
 const Playlists: React.FC = () => {
   const [items, setItems] = useState<PlaylistItemData[]>([]);
@@ -55,36 +57,40 @@ const Playlists: React.FC = () => {
 
   return (
     <>
+      <Logo>
+        <FaSpotify size={24} />
+        <strong>Spotifood</strong>
+      </Logo>
+
       <Title>Explore your featured playlists</Title>
 
-      <Form onSubmit={handleSearchPlaylistByName}>
-        <input
-          value={filterName}
-          onChange={e => setFilterName(e.target.value)}
-          placeholder="Search by name..."
-        />
-        <button type="submit">
-          <FiSearch size={22} />
-        </button>
-      </Form>
+      {!token && (
+        <>
+          <Subtitle>Start exploring your features playlists</Subtitle>
+          <LogInButton onClick={logIn}>
+            <FaSpotify size={18} />
+            Connect with Spotify
+          </LogInButton>
+        </>
+      )}
 
-      <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
+      {token && (
+        <>
+          <SearchNameForm onSubmit={handleSearchPlaylistByName}>
+            <input
+              value={filterName}
+              onChange={e => setFilterName(e.target.value)}
+              placeholder="Search by name..."
+            />
+            <button type="submit">
+              <FiSearch size={22} />
+            </button>
+          </SearchNameForm>
 
-      {!token && <LogInButton onClick={logIn}>Login to Spotify</LogInButton>}
+          <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
 
-      {token && items && (
-        <PlaylistItems>
-          {items.map(item => (
-            <a key={item.id} href={item.external_urls.spotify}>
-              <img src={item.images[0].url} alt={item.name} />
-
-              <div>
-                <strong>{item.name}</strong>
-                <p>{item.description}</p>
-              </div>
-            </a>
-          ))}
-        </PlaylistItems>
+          {items && <PlaylistItems items={items} />}
+        </>
       )}
     </>
   );
