@@ -56,13 +56,21 @@ export const LogInButton = styled.button`
   }
 `;
 
-export const SearchNameForm = styled.form`
+export const SearchNameForm = styled.div`
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #fff;
+  border-radius: 0.3rem;
   display: flex;
+  padding: 0 1rem;
   margin-bottom: 2.5rem;
 
+  svg {
+    color: #a8a8b3;
+  }
+
   input {
-    border: 2px solid #fff;
-    border-radius: 0.3rem 0 0 0.3rem;
+    border: none;
     color: #3a3a3a;
     flex: 1;
     height: 2.8rem;
@@ -70,21 +78,6 @@ export const SearchNameForm = styled.form`
 
     &::placeholder {
       color: #a8a8b3;
-    }
-  }
-
-  button {
-    background-color: #1db954;
-    border: none;
-    border-radius: 0 0.3rem 0.3rem 0;
-    color: #fff;
-    font-weight: bold;
-    height: 2.8rem;
-    padding: 0 1.5rem;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: ${shade(0.2, '#1db954')};
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FormEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { FaSpotify } from 'react-icons/fa';
 
@@ -19,7 +19,6 @@ import PlaylistItems from './components/PlaylistItems';
 import { SearchNameForm, LogInButton, Logo, Subtitle, Title } from './styles';
 
 const Playlists: React.FC = () => {
-  const [filterName, setFilterName] = useState('');
   const [initialItems, setInitialItems] = useState<PlaylistItemData[]>([]);
   const [items, setItems] = useState<PlaylistItemData[]>([]);
   const [isLoadingItems, setIsLoadingItems] = useState(true);
@@ -48,17 +47,17 @@ const Playlists: React.FC = () => {
     }
   }
 
-  function handleSearchPlaylistByName(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function handleSearchPlaylistByName(event: ChangeEvent<HTMLInputElement>) {
+    const name = event.target.value;
 
-    if (!filterName) {
+    if (!name) {
       setItems(initialItems);
       return;
     }
 
-    const regex = new RegExp(`${filterName}.+$`, 'i');
+    const regex = new RegExp(`${name}.+$`, 'i');
 
-    const filteredItems = items.filter(item => {
+    const filteredItems = initialItems.filter(item => {
       return item.name.search(regex) !== -1;
     });
 
@@ -86,15 +85,12 @@ const Playlists: React.FC = () => {
 
       {token && (
         <>
-          <SearchNameForm onSubmit={handleSearchPlaylistByName}>
+          <SearchNameForm>
+            <FiSearch size={20} />
             <input
-              value={filterName}
-              onChange={e => setFilterName(e.target.value)}
+              onChange={handleSearchPlaylistByName}
               placeholder="Search by name..."
             />
-            <button type="submit">
-              <FiSearch size={22} />
-            </button>
           </SearchNameForm>
 
           <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
