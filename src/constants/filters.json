@@ -32,7 +32,7 @@
     },
     {
       "id": "country",
-      "name": "País",
+      "name": "Country",
       "values": [
         {
           "value": "AU",
@@ -51,7 +51,7 @@
           "name": "Portugal"
         },
         {
-          "value": "en_US",
+          "value": "US",
           "name": "EUA"
         },
         {
@@ -62,7 +62,7 @@
     },
     {
       "id": "timestamp",
-      "name": "Data e Horário",
+      "name": "Date and Time",
       "validation": {
         "primitiveType": "STRING",
         "entityType": "DATE_TIME",
@@ -71,7 +71,7 @@
     },
     {
       "id": "limit",
-      "name": "Quantidade",
+      "name": "Items per page",
       "validation": {
         "primitiveType": "INTEGER",
         "min": 1,
@@ -80,7 +80,7 @@
     },
     {
       "id": "offset",
-      "name": "Página",
+      "name": "Page",
       "validation": {
         "primitiveType": "INTEGER"
       }

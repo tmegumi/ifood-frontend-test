@@ -5,7 +5,7 @@ import filtersData from '../constants/filters.json';
 export interface FilterQuery {
   locale?: string;
   country?: string;
-  timestamp?: string;
+  timestamp?: Date | null;
   limit?: string;
   offset?: string;
 }
@@ -59,7 +59,7 @@ export const getFeaturePlaylists = async (
     params.country = filter.country;
   }
   if (filter?.timestamp) {
-    params.timestamp = filter.timestamp;
+    params.timestamp = filter.timestamp.toISOString()
   }
   if (filter?.limit) {
     params.limit = filter.limit;
@@ -88,8 +88,8 @@ export const getPlaylistFilters = (): Filter[] => {
     if (filter.values) {
       valueItems = filter.values.map(value => {
         return {
-          name: value.name,
-          label: value.value,
+          name: value.value,
+          label: value.name,
         };
       });
     }

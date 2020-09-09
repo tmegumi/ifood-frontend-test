@@ -7,7 +7,7 @@ const scopes = ['user-read-email'];
 const logIn = (): void => {
   const logInUri = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
     '%20',
-  )}&response_type=token&show_dialog=true`;
+  )}&response_type=token`;
 
   window.location.href = logInUri;
 };
