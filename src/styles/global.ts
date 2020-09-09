@@ -18,12 +18,6 @@ export default createGlobalStyle`
     font: 16px Assistant, sans-serif;
   }
 
-  #root {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
   button {
     cursor: pointer;
   }

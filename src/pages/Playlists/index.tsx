@@ -16,7 +16,16 @@ import Loader from '../../components/Loader';
 import PlaylistFilter from './components/PlaylistFilter';
 import PlaylistItems from './components/PlaylistItems';
 
-import { SearchNameForm, LogInButton, Logo, Subtitle, Title } from './styles';
+import {
+  Container,
+  Content,
+  ContentHeader,
+  LogInButton,
+  Logo,
+  SearchNameForm,
+  Subtitle,
+  Title,
+} from './styles';
 
 const Playlists: React.FC = () => {
   const [initialItems, setInitialItems] = useState<PlaylistItemData[]>([]);
@@ -65,42 +74,45 @@ const Playlists: React.FC = () => {
   }
 
   return (
-    <>
-      <Logo>
-        <FaSpotify size={24} />
-        <strong>Spotifood</strong>
-      </Logo>
+    <Container>
+      <Content>
+        <ContentHeader hasToken={token?.length === 0}>
+          <Logo>
+            <FaSpotify size={24} />
+            <strong>Spotifood</strong>
+          </Logo>
+          <Title>Explore your featured playlists</Title>
 
-      <Title>Explore your featured playlists</Title>
+          {!token && (
+            <>
+              <Subtitle>Start exploring your features playlists</Subtitle>
+              <LogInButton onClick={logIn}>
+                <FaSpotify size={18} />
+                Connect with Spotify
+              </LogInButton>
+            </>
+          )}
+        </ContentHeader>
 
-      {!token && (
-        <>
-          <Subtitle>Start exploring your features playlists</Subtitle>
-          <LogInButton onClick={logIn}>
-            <FaSpotify size={18} />
-            Connect with Spotify
-          </LogInButton>
-        </>
-      )}
+        {token && (
+          <>
+            <SearchNameForm>
+              <FiSearch size={20} />
+              <input
+                onChange={handleSearchPlaylistByName}
+                placeholder="Search by name..."
+              />
+            </SearchNameForm>
 
-      {token && (
-        <>
-          <SearchNameForm>
-            <FiSearch size={20} />
-            <input
-              onChange={handleSearchPlaylistByName}
-              placeholder="Search by name..."
-            />
-          </SearchNameForm>
+            <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
 
-          <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
+            <Loader isLoading={isLoadingItems} />
 
-          <Loader isLoading={isLoadingItems} />
-
-          {items && <PlaylistItems items={items} />}
-        </>
-      )}
-    </>
+            {items && <PlaylistItems items={items} />}
+          </>
+        )}
+      </Content>
+    </Container>
   );
 };
 
