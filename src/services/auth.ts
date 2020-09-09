@@ -1,11 +1,12 @@
-// Replace with your app's client ID, redirect URI and desired scopes
-const authEndpoint = 'https://accounts.spotify.com/authorize';
-const clientId = '6aa26c35f55d4a109610e64c709057c5';
-const redirectUri = 'http://localhost:3000';
-const scopes = ['user-read-email'];
+import {
+  AUTH_ENDPOINT,
+  CLIENT_ID,
+  REDIRECT_URI,
+  SCOPES,
+} from '../constants/apiConfig';
 
 const logIn = (): void => {
-  const logInUri = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+  const logInUri = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES.join(
     '%20',
   )}&response_type=token`;
 
