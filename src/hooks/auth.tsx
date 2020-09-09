@@ -55,6 +55,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
         localStorage.removeItem('@Spotifood:expiresAt');
       }
     }
+
+    if (window.location.hash !== '') {
+      window.location.hash = '';
+    }
   }, [token, location]);
 
   return (
