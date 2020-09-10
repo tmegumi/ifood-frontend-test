@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState, ChangeEvent } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  ChangeEvent,
+} from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { FaSpotify } from 'react-icons/fa';
 
@@ -32,14 +38,39 @@ const Playlists: React.FC = () => {
   const [items, setItems] = useState<PlaylistItemData[]>([]);
   const [isLoadingItems, setIsLoadingItems] = useState(true);
 
+  const searchName = useRef('');
+
   const { token } = useAuth();
   const { filter } = useFilter();
+
+  function getFilteredPlaylistItems(
+    playlists: PlaylistItemData[],
+    name: string,
+  ) {
+    let filteredItems = playlists;
+
+    if (name) {
+      const regex = new RegExp(`${name}.+$`, 'i');
+
+      filteredItems = playlists.filter(item => {
+        return item.name.search(regex) !== -1;
+      });
+    }
+
+    setItems(filteredItems);
+  }
+
+  function handleSearchPlaylistByName(event: ChangeEvent<HTMLInputElement>) {
+    searchName.current = event.target.value;
+
+    getFilteredPlaylistItems(initialItems, searchName.current);
+  }
 
   const getPlaylistsItems = useCallback(() => {
     if (token) {
       getFeaturePlaylists(token, filter).then(playlists => {
         setInitialItems(playlists);
-        setItems(playlists);
+        getFilteredPlaylistItems(playlists, searchName.current);
         setIsLoadingItems(false);
       });
     }
@@ -54,23 +85,6 @@ const Playlists: React.FC = () => {
 
     return () => clearInterval(timerID);
   }, [getPlaylistsItems]);
-
-  function handleSearchPlaylistByName(event: ChangeEvent<HTMLInputElement>) {
-    const name = event.target.value;
-
-    if (!name) {
-      setItems(initialItems);
-      return;
-    }
-
-    const regex = new RegExp(`${name}.+$`, 'i');
-
-    const filteredItems = initialItems.filter(item => {
-      return item.name.search(regex) !== -1;
-    });
-
-    setItems(filteredItems);
-  }
 
   return (
     <Container>
