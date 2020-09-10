@@ -55,7 +55,7 @@ export const Logo = styled.div`
 
 export const ContentHeader = styled.div<ContentHeaderProps>`
   ${props =>
-    props.hasToken &&
+    !props.hasToken &&
     css`
       height: 50%;
       transform: translateY(50%);
@@ -63,9 +63,12 @@ export const ContentHeader = styled.div<ContentHeaderProps>`
     `}
 
   ${props =>
-    !props.hasToken &&
+    props.hasToken &&
     css`
+      height: auto;
       margin-bottom: 5rem;
+      transform: none;
+      top: initial;
     `}
 `;
 

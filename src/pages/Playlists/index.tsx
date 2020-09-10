@@ -76,16 +76,18 @@ const Playlists: React.FC = () => {
   return (
     <Container>
       <Content>
-        <ContentHeader hasToken={token?.length === 0}>
+        <ContentHeader hasToken={token?.length !== 0}>
           <Logo>
             <FaSpotify size={24} />
             <strong>Spotifood</strong>
           </Logo>
-          <Title>Explore your featured playlists</Title>
+          <Title>Explore featured playlists</Title>
 
           {!token && (
             <>
-              <Subtitle>Start exploring your features playlists</Subtitle>
+              <Subtitle>
+                Find features playlists from whenever you want
+              </Subtitle>
               <LogInButton onClick={logIn}>
                 <FaSpotify size={18} />
                 Connect with Spotify
