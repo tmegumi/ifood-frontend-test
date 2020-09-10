@@ -59,7 +59,7 @@ export const getFeaturePlaylists = async (
     params.country = filter.country;
   }
   if (filter?.timestamp) {
-    params.timestamp = filter.timestamp.toISOString()
+    params.timestamp = filter.timestamp.toISOString();
   }
   if (filter?.limit) {
     params.limit = filter.limit;

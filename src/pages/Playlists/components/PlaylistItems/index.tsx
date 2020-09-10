@@ -2,15 +2,15 @@ import React from 'react';
 
 import { Container } from './styles';
 
-import {
-  PlaylistItemData
-} from '../../../../services/playlists';
+import { PlaylistItemData } from '../../../../services/playlists';
 
 interface PlaylistItemsProps {
   items: PlaylistItemData[];
 }
 
-const PlaylistItems: React.FC<PlaylistItemsProps> = ({ items }: PlaylistItemsProps) => {
+const PlaylistItems: React.FC<PlaylistItemsProps> = ({
+  items,
+}: PlaylistItemsProps) => {
   return (
     <Container>
       {items.map(item => (
