@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import filtersData from '../constants/filters.json';
+import getTextWithoutHTMLTags from '../utils/getTextWithoutHTMLTags';
 
 export interface FilterQuery {
   locale?: string;
@@ -26,24 +26,6 @@ interface PlaylistItemImage {
 
 interface QueryParams {
   [key: string]: string;
-}
-
-export interface Filter {
-  id: string;
-  name: string;
-  values?: FilterValueItem[];
-  validation?: {
-    primitiveType: string;
-    entityType?: string;
-    pattern?: string;
-    min?: number;
-    max?: number;
-  };
-}
-
-export interface FilterValueItem {
-  name: string;
-  label: string;
 }
 
 export const getFeaturePlaylists = async (
@@ -78,27 +60,10 @@ export const getFeaturePlaylists = async (
     },
   );
 
-  return response.data.playlists.items;
-};
+  const { items } = response.data.playlists;
 
-export const getPlaylistFilters = (): Filter[] => {
-  return filtersData.filters.map(filter => {
-    let valueItems = null;
-
-    if (filter.values) {
-      valueItems = filter.values.map(value => {
-        return {
-          name: value.value,
-          label: value.name,
-        };
-      });
-    }
-
-    return {
-      id: filter.id,
-      name: filter.name,
-      values: valueItems,
-      validation: filter.validation,
-    } as Filter;
-  });
+  return items.map((item: PlaylistItemData) => ({
+    ...item,
+    description: getTextWithoutHTMLTags(item.description),
+  }));
 };
