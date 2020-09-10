@@ -2,7 +2,7 @@
 
 Spotifood is an Web application to explore the preferred playlists from iFood's customers.
 
-![Spotifood](https://github.com/tmegumi/ifood-frontend-test/tree/master/assets/spotifood.png)
+![Spotifood](https://github.com/tmegumi/ifood-frontend-test/blob/master/assets/spotifood.png)
 
 ## ReactJS Web App
 This project was build in ReactJS with typescript template and it is structured like following:
