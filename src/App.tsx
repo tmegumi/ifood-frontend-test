@@ -1,16 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import { AuthProvider } from './hooks/auth';
+import AppProvider from './hooks';
+
 import Playlists from './pages/Playlists';
 import GlobalStyle from './styles/global';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <AppProvider>
         <Route path="/" exact component={Playlists} />
-      </AuthProvider>
+      </AppProvider>
       <GlobalStyle />
     </BrowserRouter>
   );

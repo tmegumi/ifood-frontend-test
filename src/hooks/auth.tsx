@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import getTokenFromHashLocation from '../utils/getTokenFromHashLocation';
+import authenticate from '../services/auth';
 
 interface AuthContextData {
   token?: string | null;
@@ -53,6 +54,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({
       ) {
         localStorage.removeItem('@Spotifood:token');
         localStorage.removeItem('@Spotifood:expiresAt');
+
+        authenticate();
       }
     }
 
