@@ -3,22 +3,17 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 
+import { useFilter } from '../../../../hooks/filter';
+
 import {
   Filter,
-  FilterQuery,
   FilterValueItem,
-  getPlaylistFilters,
-} from '../../../../services/playlists';
+  getFilters,
+} from '../../../../services/filter';
 
 import { Form, FormItem } from './styles';
 
-interface PlaylistFilterProps {
-  onFilterChanged(filter: FilterQuery): void;
-}
-
-const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
-  onFilterChanged,
-}: PlaylistFilterProps) => {
+const PlaylistFilter: React.FC = () => {
   const [locale, setLocale] = useState<Filter>({} as Filter);
   const [country, setCountry] = useState<Filter>({} as Filter);
   const [dateTime, setDateTime] = useState<Filter>({} as Filter);
@@ -31,19 +26,23 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
   const [selectedLimit, setSelectedLimit] = useState('');
   const [selectedOffset, setSelectedOffset] = useState('');
 
+  const { updateFilter } = useFilter();
+
   useEffect(() => {
-    getPlaylistFilters().forEach(filter => {
-      if (filter.id === 'locale') {
-        setLocale(filter);
-      } else if (filter.id === 'country') {
-        setCountry(filter);
-      } else if (filter.id === 'timestamp') {
-        setDateTime(filter);
-      } else if (filter.id === 'limit') {
-        setLimit(filter);
-      } else if (filter.id === 'offset') {
-        setOffset(filter);
-      }
+    getFilters().then(filters => {
+      filters.forEach(filter => {
+        if (filter.id === 'locale') {
+          setLocale(filter);
+        } else if (filter.id === 'country') {
+          setCountry(filter);
+        } else if (filter.id === 'timestamp') {
+          setDateTime(filter);
+        } else if (filter.id === 'limit') {
+          setLimit(filter);
+        } else if (filter.id === 'offset') {
+          setOffset(filter);
+        }
+      });
     });
   }, []);
 
@@ -68,7 +67,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
   function handlePlaylistFilter(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    onFilterChanged({
+    updateFilter({
       locale: selectedLocale,
       country: selectedCountry,
       timestamp: selectedDateTime,
@@ -124,7 +123,7 @@ const PlaylistFilter: React.FC<PlaylistFilterProps> = ({
           type="number"
         />
       </FormItem>
-      <button type="submit">Filter</button>
+      <button type="submit">Filtrar</button>
     </Form>
   );
 };

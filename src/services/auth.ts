@@ -5,12 +5,12 @@ import {
   SCOPES,
 } from '../constants/apiConfig';
 
-const logIn = (): void => {
-  const logInUri = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES.join(
+const authenticate = (): void => {
+  const authenticateUri = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES.join(
     '%20',
   )}&response_type=token`;
 
-  window.location.href = logInUri;
+  window.location.href = authenticateUri;
 };
 
-export default logIn;
+export default authenticate;

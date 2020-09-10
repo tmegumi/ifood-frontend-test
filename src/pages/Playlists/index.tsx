@@ -1,13 +1,13 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useCallback, useEffect, useState, ChangeEvent } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { FaSpotify } from 'react-icons/fa';
 
 import { useAuth } from '../../hooks/auth';
+import { useFilter } from '../../hooks/filter';
 
-import logIn from '../../services/auth';
+import authenticate from '../../services/auth';
 
 import {
-  FilterQuery,
   PlaylistItemData,
   getFeaturePlaylists,
 } from '../../services/playlists';
@@ -33,28 +33,27 @@ const Playlists: React.FC = () => {
   const [isLoadingItems, setIsLoadingItems] = useState(true);
 
   const { token } = useAuth();
+  const { filter } = useFilter();
 
-  function setItemsLoaded(playlists: PlaylistItemData[]) {
-    setInitialItems(playlists);
-    setItems(playlists);
-    setIsLoadingItems(false);
-  }
-
-  useEffect(() => {
+  const getPlaylistsItems = useCallback(() => {
     if (token) {
-      getFeaturePlaylists(token).then(playlists => {
-        setItemsLoaded(playlists);
+      getFeaturePlaylists(token, filter).then(playlists => {
+        setInitialItems(playlists);
+        setItems(playlists);
+        setIsLoadingItems(false);
       });
     }
-  }, [token]);
+  }, [token, filter]);
 
-  async function handleFilterPlaylists(filter: FilterQuery) {
-    if (token) {
-      const playlists = await getFeaturePlaylists(token, filter);
+  useEffect(() => {
+    getPlaylistsItems();
 
-      setItemsLoaded(playlists);
-    }
-  }
+    const timerID = setInterval(() => {
+      getPlaylistsItems();
+    }, 30000);
+
+    return () => clearInterval(timerID);
+  }, [getPlaylistsItems]);
 
   function handleSearchPlaylistByName(event: ChangeEvent<HTMLInputElement>) {
     const name = event.target.value;
@@ -81,16 +80,16 @@ const Playlists: React.FC = () => {
             <FaSpotify size={24} />
             <strong>Spotifood</strong>
           </Logo>
-          <Title>Explore featured playlists</Title>
+          <Title>Explore as playlists em destaque</Title>
 
           {!token && (
             <>
               <Subtitle>
-                Find features playlists from whenever you want
+                Aqui você encontra a melhor seleção de playlists
               </Subtitle>
-              <LogInButton onClick={logIn}>
+              <LogInButton onClick={authenticate}>
                 <FaSpotify size={18} />
-                Connect with Spotify
+                Conectar com Spotify
               </LogInButton>
             </>
           )}
@@ -102,11 +101,11 @@ const Playlists: React.FC = () => {
               <FiSearch size={20} />
               <input
                 onChange={handleSearchPlaylistByName}
-                placeholder="Search by name..."
+                placeholder="Pesquisar por nome..."
               />
             </SearchNameForm>
 
-            <PlaylistFilter onFilterChanged={handleFilterPlaylists} />
+            <PlaylistFilter />
 
             <Loader isLoading={isLoadingItems} />
 
